@@ -27,6 +27,19 @@ resource "azurerm_kubernetes_cluster" "sre-test-aks-cilium" {
   tags = {
     team = "sre"
     shortname = "agi"
+    pool = "control-plane"
+  }
+}
+
+resource "azurerm_kubernetes_cluster_node_pool" "aksciliumnp" {
+  name                  = "aksciliumnp"
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.sre-test-aks-cilium.id
+  vm_size               = "Standard_B2s"
+  node_count            = 1
+  tags = {
+    team = "sre"
+    shortname = "agi"
+    pool = "apps-node"
   }
 }
 

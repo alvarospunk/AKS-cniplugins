@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-python
+  namespace: apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-python
+  template:
+    metadata:
+      labels:
+        app: nginx-python
+    spec:
+      containers:
+      - name: nginx-python-container
+        image: tiangolo/uwsgi-nginx:python3.8
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: python-script-volume
+          mountPath: /app
+        command: ["/bin/sh", "-c"]
+        args: ["python /app/generate_data.py && nginx -g 'daemon off;'"]
+      volumes:
+      - name: python-script-volume
+        configMap:
+          name: python-script-config
