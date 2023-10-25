@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-python
+  namespace: apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-python
+  template:
+    metadata:
+      labels:
+        app: nginx-python
+    spec:
+      containers:
+      - name: nginx-python-container
+        image: tiangolo/uwsgi-nginx:python3.8
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: python-script-volume
+          mountPath: /scripts
+        command: ["/bin/sh", "-c"]
+        args: ["mkdir -p /app/static && python /scripts/generate_data.py && nginx -g 'daemon off;'"]
+      volumes:
+      - name: python-script-volume
+        configMap:
+          name: python-script-config
+--- #using envoy this is the only necessary thing
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-python-svc
+  namespace: apps
+  labels:
+    run: nginx-python
+spec:
+  ports:
+  - port: 80
+  selector:
+    run: nginx-python

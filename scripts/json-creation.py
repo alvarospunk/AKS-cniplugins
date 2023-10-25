@@ -22,7 +22,7 @@ def generate_random_data():
 
 def main():
     data = generate_random_data()
-    with open("/tmp/large_file.json", "w") as json_file:
+    with open("/app/static/large_file.json", "w") as json_file:
         json.dump(data, json_file)
 
 if __name__ == "__main__":
