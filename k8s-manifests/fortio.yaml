@@ -24,4 +24,4 @@ spec:
         - "-qps=8.33"               # 500 solicitudes por minuto dividido por 60 segundos por minuto
         - "-t=0"                    # Ejecuta indefinidamente
         # - "-o=/tmp/fortio.log"     # Especifica el archivo para escribir los resultados
-        - "http://nginx-python-svc.apps.svc.cluster.local/index"
+        - "http://nginx-python-svc-2.apps.svc.cluster.local:8080"
