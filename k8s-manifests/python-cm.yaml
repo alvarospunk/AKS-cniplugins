@@ -10,15 +10,35 @@ data:
     }
 
     http {
-    server {
-      listen 80;
+      server {
+        listen 80;
 
-      location / {
-        root /app/static;
-        index large_file.json;
+        location / {
+          root /app/static;
+          index large_file.json;
+        }
+      }
+
+      server {
+        listen 8080;
+
+        location / {
+          root /app/static;
+          index index.html;
+        }
       }
     }
-    }
+  
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Survey Talk</title>
+    </head>
+    <body>
+        <h1>Are you enjoying the talk?</h1>
+    </body>
+    </html>
     
   generate_data.py: |
     import json
