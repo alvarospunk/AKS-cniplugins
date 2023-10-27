@@ -22,7 +22,7 @@ spec:
         - name: python-script-volume
           mountPath: /scripts
         command: ["/bin/sh", "-c"]
-        args: ["mkdir -p /app/static && python /scripts/generate_data.py && nginx -g 'daemon off;'"]
+        args: ["mkdir -p /app/static && python /scripts/generate_data.py && cat /scripts/nginx.conf > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
       volumes:
       - name: python-script-volume
         configMap:
@@ -34,9 +34,9 @@ metadata:
   name: nginx-python-svc
   namespace: apps
   labels:
-    run: nginx-python
+    app: nginx-python
 spec:
   ports:
   - port: 80
   selector:
-    run: nginx-python
+    app: nginx-python

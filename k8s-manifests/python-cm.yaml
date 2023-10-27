@@ -4,6 +4,22 @@ metadata:
   name: python-script-config
   namespace: apps
 data:
+  nginx.conf: |
+    events {
+      worker_connections  4096;  ## Default: 1024
+    }
+
+    http {
+    server {
+      listen 80;
+
+      location / {
+        root /app/static;
+        index large_file.json;
+      }
+    }
+    }
+    
   generate_data.py: |
     import json
     import random
