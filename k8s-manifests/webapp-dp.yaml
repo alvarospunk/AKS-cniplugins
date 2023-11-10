@@ -1,0 +1,48 @@
+# Deployment para la versión estable (v1)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-v1
+  namespace: apps
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webapp
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: webapp
+        version: v1
+    spec:
+      containers:
+      - name: webapp
+        image: nginx:stable-alpine
+        ports:
+        - containerPort: 80
+
+---
+# Deployment para la versión canary (v2)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-v2
+  namespace: apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: webapp
+        version: v2
+    spec:
+      containers:
+      - name: webapp
+        image: nginx:mainline-alpine
+        ports:
+        - containerPort: 80

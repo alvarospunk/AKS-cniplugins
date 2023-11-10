@@ -1,0 +1,54 @@
+resource "azurerm_resource_group" "sre-test-rg" {
+  name     = "sre-test-rg"
+  location = "West Europe"
+  tags = {
+    team = "sre"
+    shortname = "agi"
+  }
+}
+
+resource "azurerm_kubernetes_cluster" "sre-test-aks-cilium" {
+  name                = "sre-test-aks-cilium"
+  location            = azurerm_resource_group.sre-test-rg.location
+  resource_group_name = azurerm_resource_group.sre-test-rg.name
+  dns_prefix          = "sre-test-aks"
+  kubernetes_version  = "1.27.3"
+
+  default_node_pool {
+    name       = "default"
+    node_count = 1
+    vm_size    = "Standard_B2s"
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  tags = {
+    team = "sre"
+    shortname = "agi"
+    pool = "control-plane"
+  }
+}
+
+resource "azurerm_kubernetes_cluster_node_pool" "aksciliumnp" {
+  name                  = "aksciliumnp"
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.sre-test-aks-cilium.id
+  vm_size               = "Standard_B2s"
+  node_count            = 1
+  tags = {
+    team = "sre"
+    shortname = "agi"
+    pool = "apps-node"
+  }
+}
+
+output "client_certificate" {
+  value     = azurerm_kubernetes_cluster.sre-test-aks-cilium.kube_config.0.client_certificate
+  sensitive = true
+}
+
+output "kube_config" {
+  value = azurerm_kubernetes_cluster.sre-test-aks-cilium.kube_config_raw
+  sensitive = true
+}

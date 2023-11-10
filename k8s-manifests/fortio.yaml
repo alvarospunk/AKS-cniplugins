@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fortio-client
+  namespace: apps
+  labels:
+    app: fortio-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fortio-client
+  template:
+    metadata:
+      labels:
+        app: fortio-client
+    spec:
+      containers:
+      - name: fortio-client
+        image: fortio/fortio:latest
+        args:
+        - "load"
+        - "-c=20"                   # 20 conexiones simultáneas
+        - "-qps=8.33"               # 500 solicitudes por minuto dividido por 60 segundos por minuto
+        - "-t=0"                    # Ejecuta indefinidamente
+        # - "-o=/tmp/fortio.log"     # Especifica el archivo para escribir los resultados
+        - "http://nginx-python-svc-2.apps.svc.cluster.local:8080"
