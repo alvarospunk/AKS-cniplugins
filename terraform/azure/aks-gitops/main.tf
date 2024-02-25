@@ -1,12 +1,3 @@
-resource "azurerm_resource_group" "sre-test-rg" {
-  name     = "sre-test-rg"
-  location = "West Europe"
-  tags = {
-    team = "sre"
-    shortname = "agi"
-  }
-}
-
 resource "azurerm_kubernetes_cluster" "sre-test-aks-gitops" {
   name                = "sre-test-aks-gitops"
   location            = azurerm_resource_group.sre-test-rg.location
